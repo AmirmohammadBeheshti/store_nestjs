@@ -1,17 +1,15 @@
 #!/bin/bash
 
+
+read -p 'commit : ' uservar
+read -p 'branch: ' passvar
+
+
 git add .
 
-echo commit ?
+echo $uservar
 
-read commitName
+git commit -m $uservar
 
-git commit -m commitName
+git push origin $branch
 
-echo In which branch ?
-
-read branchNames
-
-echo branchNames
-
-git push origin branchNames
