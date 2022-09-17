@@ -10,7 +10,8 @@ git commit -m commitName
 
 echo In which branch ?
 
-read branchName
+read branchNames
 
-echo branchName
-git push origin  branchNames
+echo branchNames
+
+git push origin branchNames
