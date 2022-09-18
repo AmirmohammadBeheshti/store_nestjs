@@ -7,7 +7,7 @@ import { CatchAllExceptionFilter } from './common/filter/catch-all-exception.fil
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalFilters(new CatchAllExceptionFilter());
+  // app.useGlobalFilters(new CatchAllExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
