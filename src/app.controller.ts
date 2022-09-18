@@ -1,12 +1,16 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
+import { TransformDataPipe } from './common/pipe/transform-data.pipe';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Post()
+  // when set the pipe for body after request set the pipe and filter that on this case
+  getHello(
+    @Body(TransformDataPipe) payload: { name: string; family: string },
+  ): any {
+    return payload;
   }
 }
