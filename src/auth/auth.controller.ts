@@ -1,24 +1,14 @@
-import {
-  Body,
-  ClassSerializerInterceptor,
-  Controller,
-  Post,
-  UseInterceptors,
-} from '@nestjs/common';
-import { Transform } from 'class-transformer';
-import { serializeUser } from './auth.serialize';
+import { Controller, Request, Post, UseGuards, Body } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from './dto/createUser.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly auth: AuthService) {}
-  @Transform(({ value }) => value.email)
-  role: AuthService;
-  @Post('sign-in')
-  // @UseInterceptors(ClassSerializerInterceptor)
-  async signInUser(@Body() createUserDto: CreateUserDto) {
-    const value = await this.auth.signInUser(createUserDto);
-    return new serializeUser(value);
+  constructor(private authService: AuthService) {}
+
+  // @UseGuards(AuthGuard('local'))
+  @Post('login')
+  async login(@Body() body) {
+    return this.authService.login(Body);
   }
 }

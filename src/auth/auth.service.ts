@@ -1,38 +1,30 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { Auth, authDocument } from './schema/auth.schema';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import { CreateUserDto } from './dto/createUser.dto';
+import { Injectable, NotAcceptableException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { UniqueConstraintsError } from 'src/common/classes/mongodb-errors.class';
+import { JwtService } from '@nestjs/jwt';
+import { UserService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(Auth.name) private readonly authModel: Model<authDocument>,
+    private readonly usersService: UserService,
+    private jwtService: JwtService,
   ) {}
-  hashPassword(password: string): string {
-    return bcrypt.hash(password, 10);
-  }
-  async signInUser(createUserDto: CreateUserDto): Promise<Auth> {
-    try {
-      const hashPassword = await this.hashPassword(createUserDto.password);
-      const res = await this.authModel.create({
-        ...createUserDto,
-        password: hashPassword,
-      });
-      return res;
-    } catch (e) {
-      console.log(e);
-      if (e.code === 11000) {
-        throw new UniqueConstraintsError(e.message);
-      }
-      throw new NotFoundException(e.message);
+  async validateUser(username: string, password: string): Promise<any> {
+    const user = await this.usersService.getUser({ email: username });
+    if (!user) return null;
+    const passwordValid = await bcrypt.compare(password, user.password);
+    if (!user) {
+      throw new NotAcceptableException('could not find the user');
     }
+    if (user && passwordValid) {
+      return user;
+    }
+    return null;
+  }
+  async login(user: any) {
+    const payload = { username: user.username, sub: user._id };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }
