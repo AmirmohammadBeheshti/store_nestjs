@@ -9,9 +9,9 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     UsersModule,
+    AuthModule,
     ConfigModule.forRoot({}),
     MongooseModule.forRoot('mongodb://localhost:27017/store'),
-    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

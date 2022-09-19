@@ -6,8 +6,8 @@ import { TransformDataPipe } from './common/pipe/transform-data.pipe';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Post()
   // when set the pipe for body after request set the pipe and filter that on this case
+  @Post()
   getHello(
     @Body(TransformDataPipe) payload: { name: string; family: string },
   ): any {

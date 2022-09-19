@@ -1,6 +1,5 @@
-import { Controller, Post, UseGuards, Body } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { AuthService } from 'src/auth/auth.service';
+import { Controller, Post, UseGuards, Body, Get } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { LocalStrategy } from 'src/auth/local.strategy';
 import { CreateUserDto } from './dto/createUser.dto';
 import { loginUserDto } from './dto/login.dto';
@@ -16,6 +15,11 @@ export class UsersController {
   @UseGuards(LocalStrategy)
   @Post('login')
   async login(@Body() loginUserDto: loginUserDto) {
-    return this.authService.findOne(loginUserDto);
+    return this.userService.findOne(loginUserDto.username);
+  }
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile() {
+    return 'a';
   }
 }
