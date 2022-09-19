@@ -1,41 +1,28 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { User, userDocument } from './schema/user.schema';
-import { Model } from 'mongoose';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { catchError } from 'rxjs';
+import { AuthService } from 'src/auth/auth.service';
 import { CreateUserDto } from './dto/createUser.dto';
-import * as bcrypt from 'bcrypt';
-import { UniqueConstraintsError } from 'src/common/classes/mongodb-errors.class';
+import { loginUserDto } from './dto/login.dto';
+import { User, userDocument } from './schema/user.schema';
 
 @Injectable()
-export class UserService {
+export class UsersService {
   constructor(
-    @InjectModel(User.name) private readonly authModel: Model<userDocument>,
+    @InjectModel(User.name) private readonly userModel: Model<userDocument>,
+    private readonly authService: AuthService,
   ) {}
-  hashPassword(password: string): string {
-    return bcrypt.hash(password, 10);
-  }
-  async signInUser(createUserDto: CreateUserDto): Promise<User> {
+  async createUser(createUserDto: CreateUserDto) {
     try {
-      const hashPassword = await this.hashPassword(createUserDto.password);
-      const res = await this.authModel.create({
-        ...createUserDto,
-        password: hashPassword,
-      });
+      const res = await this.userModel.create(createUserDto);
       return res;
     } catch (e) {
       console.log(e);
-      if (e.code === 11000) {
-        throw new UniqueConstraintsError(e.message);
-      }
-      throw new NotFoundException(e.message);
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
   }
-  async getUser(query: object): Promise<User> {
-    return this.authModel.findOne(query);
+  async findOne(loginUserDto: loginUserDto): Promise<any> {
+    return this.authService.login(loginUserDto);
   }
 }

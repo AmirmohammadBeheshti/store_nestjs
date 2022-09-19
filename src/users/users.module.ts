@@ -1,18 +1,12 @@
 import { Module } from '@nestjs/common';
-import { usersController } from './users.controller';
-import { UserService } from './users.service';
-import { MongooseModule } from '@nestjs/mongoose';
-import { JwtModule } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
+import { UsersService } from './users.service';
+import { UsersController } from './users.controller';
 import { User, UserSchema } from './schema/user.schema';
+import { MongooseModule } from '@nestjs/mongoose';
+import { AuthService } from 'src/auth/auth.service';
 
 @Module({
   imports: [
-    PassportModule,
-    JwtModule.register({
-      secret: 'secretKey',
-      signOptions: { expiresIn: '60s' },
-    }),
     MongooseModule.forFeatureAsync([
       {
         name: User.name,
@@ -25,11 +19,9 @@ import { User, UserSchema } from './schema/user.schema';
         },
       },
     ]),
-
-    // MongooseModule.forFeature([{ name: Auth.name, schema: AuthSchema }]),
   ],
-  controllers: [usersController],
-  providers: [UserService],
-  exports: [UserService],
+  providers: [UsersService, AuthService],
+  exports: [UsersService],
+  controllers: [UsersController],
 })
 export class UsersModule {}

@@ -1,22 +1,21 @@
-import {
-  Body,
-  ClassSerializerInterceptor,
-  Controller,
-  Post,
-  UseInterceptors,
-} from '@nestjs/common';
-import { serializeUser } from './users.serialize';
-import { UserService } from './users.service';
+import { Controller, Post, UseGuards, Body } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { AuthService } from 'src/auth/auth.service';
+import { LocalStrategy } from 'src/auth/local.strategy';
 import { CreateUserDto } from './dto/createUser.dto';
+import { loginUserDto } from './dto/login.dto';
+import { UsersService } from './users.service';
 
-@Controller('auth')
-export class usersController {
-  constructor(private readonly userService: UserService) {}
-
-  @Post('sign-in')
-  // @UseInterceptors(ClassSerializerInterceptor)
-  async signInUser(@Body() createUserDto: CreateUserDto) {
-    const value = await this.userService.signInUser(createUserDto);
-    return new serializeUser(value);
+@Controller('users')
+export class UsersController {
+  constructor(private readonly userService: UsersService) {}
+  @Post('register')
+  async register(@Body() createUserDto: CreateUserDto) {
+    return await this.userService.createUser(createUserDto);
+  }
+  @UseGuards(LocalStrategy)
+  @Post('login')
+  async login(@Body() loginUserDto: loginUserDto) {
+    return this.authService.findOne(loginUserDto);
   }
 }
