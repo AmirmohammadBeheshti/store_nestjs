@@ -11,8 +11,9 @@ export class User {
   @Prop({ unique: true })
   email: string;
   @Prop()
-  @Exclude()
   password: string;
+  @Prop({ default: 0 })
+  balance: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -1,6 +1,12 @@
-import { Controller, Post, UseGuards, Body, Get, Param } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { LocalStrategy } from 'src/auth/local.strategy';
+import {
+  Controller,
+  Post,
+  UseGuards,
+  Body,
+  Get,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/createUser.dto';
 import { loginUserDto } from './dto/login.dto';
 import { UsersService } from './users.service';
@@ -19,6 +25,7 @@ export class UsersController {
   }
   // @UseGuards(JwtAuthGuard)
   @Get('profile/:id')
+  // getProfile(@Param('id', ParseIntPipe) id: string) {
   getProfile(@Param('id') id: string) {
     return this.userService.findById(id);
   }

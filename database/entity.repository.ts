@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Document, FilterQuery, Model, UpdateQuery } from 'mongoose';
 
 export abstract class EntityRepository<T extends Document> {
@@ -16,7 +17,7 @@ export abstract class EntityRepository<T extends Document> {
       .exec();
   }
 
-  async find(entityFilterQuery: FilterQuery<T>): Promise<T[] | null> {
+  async find(entityFilterQuery: FilterQuery<T> | null): Promise<T[] | null> {
     const a: Record<number, number> = { 500: 10 };
 
     return this.entityModel.find(entityFilterQuery);
@@ -28,7 +29,20 @@ export abstract class EntityRepository<T extends Document> {
   }
 
   async findById(id: string) {
-    return this.entityModel.findById(id);
+    console.log(id);
+    try {
+      const res = await this.entityModel.findById(id);
+      return res;
+    } catch (e) {
+      console.log(e);
+      throw new NotFoundException('User Not Found');
+    }
+  }
+  async findByIdAndUpdate(
+    id: string,
+    updateEntityData: UpdateQuery<unknown>,
+  ): Promise<T | null> {
+    return await this.entityModel.findByIdAndUpdate(id, updateEntityData);
   }
 
   async findOneAndUpdate(
@@ -38,9 +52,6 @@ export abstract class EntityRepository<T extends Document> {
     return this.entityModel.findOneAndUpdate(
       entityFilterQuery,
       updateEntityData,
-      {
-        new: true,
-      },
     );
   }
 
