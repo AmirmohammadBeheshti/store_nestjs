@@ -6,8 +6,9 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiNotImplementedResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CreateProductDto } from './dto/createProduct.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
 import { ProductService } from './product.service';
@@ -33,5 +34,13 @@ export class ProductController {
   @Delete('delete/:id')
   deleteProduct(@Param('id') id: string) {
     return this.productService.deleteProduct(id);
+  }
+  @Get('getProducts')
+  @ApiQuery({ required: false, name: 'search' })
+  getProduct(@Query('search') search?: string) {
+    console.log(search);
+    return this.productService.getAllProduct(
+      search ? { productName: { $regex: search } } : null,
+    );
   }
 }

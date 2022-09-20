@@ -43,9 +43,14 @@ export class ProductService {
       throw new NotFoundException('Product Is Not Valid');
     }
   }
-  async getAllProduct() {
+  async getAllProduct(
+    findParams: Record<string, number | string | object> | null = null,
+  ) {
     try {
-      const res = await this.productRepository.find(null);
+      console.log(findParams);
+      const res = await this.productRepository.find(findParams);
+      if (!res.length) throw new NotFoundException('Cant Find This Product');
+      console.log(res);
       return res;
     } catch (e) {
       throw new BadRequestException('Cant Find Product');
