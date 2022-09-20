@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { balanceStatus } from 'src/admin/enum';
 import { BillDto } from 'src/admin/schema/balance.dto';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UsersRepository } from './users.repository';
@@ -30,24 +31,34 @@ export class UsersService {
       throw new NotFoundException('Not Found User');
     }
   }
+
+  async updateOne(
+    find: Record<string, string>,
+    updatedValue: any,
+  ): Promise<CreateUserDto> {
+    return this.usersRepository.updateOne(find, updatedValue);
+  }
   async bill(id: string, body: BillDto) {
     const res = await this.usersRepository.findById(id);
     if (!res) throw new NotFoundException('User Not Found');
-    try {
-      const userBalance = res.balance;
-      if (body.balanceValue > 0) {
-        if (userBalance <= body.balanceValue) {
-          throw new BadRequestException(
-            'The balance amount is less than your requested amount ',
-          );
-        }
-      } else {
-        throw new BadRequestException('Cant Bill Zero');
+    const userBalance = res.balance;
+    if (body.balanceValue > 0) {
+      if (userBalance <= body.balanceValue) {
+        throw new BadRequestException(
+          'The balance amount is less than your requested amount ',
+        );
       }
-      return 'SuccessFull';
-    } catch (e) {
-      throw new BadRequestException('Cant Bill for Users');
+    } else {
+      throw new BadRequestException('Cant Bill Zero');
     }
+    const calculateBalance =
+      body.status === balanceStatus.INCREASE
+        ? res.balance + body.balanceValue
+        : res.balance - body.balanceValue;
+    await this.usersRepository.findByIdAndUpdate(id, {
+      balance: calculateBalance,
+    });
+    return { balance: calculateBalance };
   }
   async getAllUsers() {
     try {

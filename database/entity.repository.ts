@@ -28,6 +28,20 @@ export abstract class EntityRepository<T extends Document> {
     return entity.save();
   }
 
+  // async updateOne(
+  //   find: Record<string, string>,
+  //   updateEntityData: UpdateQuery<unknown>,
+  // ): Promise<T | null> {
+  //   return this.entityModel.updateOne(find, updateEntityData);
+  // }
+
+  async updateOne(
+    find: Record<string, string>,
+    updatedValue: UpdateQuery<unknown>,
+  ): Promise<any> {
+    return await this.entityModel.updateOne(find, updatedValue);
+  }
+
   async findById(id: string) {
     console.log(id);
     try {
