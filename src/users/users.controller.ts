@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Body, Get } from '@nestjs/common';
+import { Controller, Post, UseGuards, Body, Get, Param } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { LocalStrategy } from 'src/auth/local.strategy';
 import { CreateUserDto } from './dto/createUser.dto';
@@ -12,14 +12,14 @@ export class UsersController {
   async register(@Body() createUserDto: CreateUserDto) {
     return await this.userService.createUser(createUserDto);
   }
-  @UseGuards(LocalStrategy)
+  // @UseGuards(LocalStrategy)
   @Post('login')
   async login(@Body() loginUserDto: loginUserDto) {
     return this.userService.findOne(loginUserDto.username);
   }
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile() {
-    return 'a';
+  // @UseGuards(JwtAuthGuard)
+  @Get('profile/:id')
+  getProfile(@Param('id') id: string) {
+    return this.userService.findById(id);
   }
 }
