@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { TransformationType } from 'class-transformer';
+import { Types } from 'mongoose';
 import { CreateProductDto } from './dto/createProduct.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
 import { ProductRepository } from './product.repository';
@@ -19,6 +20,14 @@ export class ProductService {
       console.log(e);
       throw new BadRequestException('Cant Save');
     }
+  }
+  async reserveProduct(id: string) {
+    const res = await this.productRepository.findById(id);
+    const saveProduct = await this.productRepository.reserveProduct({
+      product: res,
+      user_id: new Types.ObjectId(id),
+    });
+    return saveProduct;
   }
   async editProductById(id: string, updateProductDto: UpdateProductDto) {
     try {
