@@ -1,4 +1,4 @@
-import { CreateUserDto } from './dto/createUser.dto';
+import { CreateUserDto } from '../auth/dto/createUser.dto';
 
 export class serializeUser {
   email: string;

@@ -27,8 +27,6 @@ import { User, UserSchema } from './schema/user.schema';
         },
       },
     ]),
-
-    // MongooseModule.forFeature([{ name: Auth.name, schema: AuthSchema }]),
   ],
   providers: [UsersService, UsersRepository],
   controllers: [UsersController],
