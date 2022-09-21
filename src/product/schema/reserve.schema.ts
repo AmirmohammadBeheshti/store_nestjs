@@ -8,7 +8,7 @@ export type reserveSchema = Reserve & Document;
 export class Reserve {
   @Prop()
   product: Product;
-  @Prop()
+  @Prop({ default: new Types.ObjectId('632b51b154a4784de58e0c7c') })
   user_id: Types.ObjectId;
 }
 
