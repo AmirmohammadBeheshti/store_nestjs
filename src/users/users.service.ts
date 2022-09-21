@@ -9,7 +9,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { balanceStatus } from 'src/admin/enum';
 import { BillDto } from 'src/admin/schema/balance.dto';
-import { CreateUserDto } from './dto/createUser.dto';
+import { CreateUserDto } from '../auth/dto/createUser.dto';
 import { UsersRepository } from './users.repository';
 
 @Injectable()

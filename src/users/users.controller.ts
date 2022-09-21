@@ -6,27 +6,32 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Req,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/createUser.dto';
-import { loginUserDto } from './dto/login.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { AuthService } from 'src/auth/auth.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { LocalAuthGuard } from 'src/auth/local-auth.guard';
+import { LocalStrategy } from 'src/auth/local.strategy';
 import { UsersService } from './users.service';
+import { Request } from 'express';
+import { GetUser } from 'src/common/decorator/jwtGetInfo.decorator';
+import { login } from 'src/auth/interface';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
-  @Post('register')
-  async register(@Body() createUserDto: CreateUserDto) {
-    return await this.userService.createUser(createUserDto);
-  }
-  // @UseGuards(LocalStrategy)
-  @Post('login')
-  async login(@Body() loginUserDto: loginUserDto) {
-    return this.userService.findOne(loginUserDto.username);
-  }
-  // @UseGuards(JwtAuthGuard)
+
+  @UseGuards(JwtAuthGuard)
   @Get('profile/:id')
+  @ApiBearerAuth()
   // getProfile(@Param('id', ParseIntPipe) id: string) {
-  getProfile(@Param('id') id: string) {
+  getProfile(
+    @Param('id') id: string,
+    @Req() request: Request,
+    @GetUser() getInfo: login,
+  ) {
+    console.log(getInfo);
     return this.userService.findById(id);
   }
 }
