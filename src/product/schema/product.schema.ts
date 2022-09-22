@@ -5,7 +5,9 @@ import { productQuality } from '../enum';
 
 export type productDocument = Product & Document;
 
-@Schema({ collection: 'product' })
+@Schema({
+  collection: 'product',
+})
 export class Product {
   @Prop({ unique: true })
   productName: string;

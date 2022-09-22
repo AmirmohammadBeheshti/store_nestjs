@@ -8,6 +8,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AdminController } from './admin/admin.controller';
 import { AdminModule } from './admin/admin.module';
+import { TestModule } from './test/test.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AdminModule } from './admin/admin.module';
     MongooseModule.forRoot('mongodb://localhost:27017/store'),
     ProductModule,
     AdminModule,
+    TestModule,
   ],
   controllers: [AppController, AdminController],
   providers: [AppService],
