@@ -6,6 +6,7 @@ export type BlogDocument = Blog & Document;
 
 @Schema({
   collection: 'blog',
+  toJSON: { virtuals: true },
 })
 export class Blog {
   @Prop()
@@ -23,6 +24,10 @@ BlogSchema.virtual('author', {
 });
 BlogSchema.virtual('full_name').get(function () {
   return 'amirmohammad';
+});
+
+BlogSchema.virtual('setVal').set(function (value) {
+  console.log('Run the Stter', value);
 });
 
 // AuthSchema.index({ type: 1 }, { unique: true });

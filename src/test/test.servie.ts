@@ -16,7 +16,7 @@ export class TestService {
       title: 'Introducstion to Mongoose',
       authorId: 2,
     });
-    await this.allUser.create({ _id: 2, email: 'test@gmasdfil.com' });
+    await this.allUser.create({ _id: 5, email: 'test@gmasdfil.com' });
     return 'a';
   }
 
@@ -24,6 +24,7 @@ export class TestService {
     const res = await this.blog.findOne().populate('author');
     // console.log(res.$assertPopulated);
     console.log(res.get('full_name'));
-    return res.get('author');
+    // return res.get('author');
+    return res;
   }
 }
