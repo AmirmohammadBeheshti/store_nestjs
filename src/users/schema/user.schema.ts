@@ -1,20 +1,23 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Exclude, Expose } from 'class-transformer';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
+import { Product } from 'src/product/schema/product.schema';
+import { Reserve } from 'src/product/schema/reserve.schema';
 
 export type userDocument = User & Document;
 
 @Schema({ collection: 'users' })
 export class User extends Document {
   // immutable it means cant change at all
-  @Prop({ immutable: true })
+  @Prop()
   username: string;
   @Prop({ unique: true })
   email: string;
   @Prop()
-  password: string;
+  password: Types.Buffer;
   @Prop({ default: 0 })
   balance: number;
+
   @Prop({
     default: 0,
     validate: {
@@ -28,16 +31,9 @@ export class User extends Document {
     return 'a';
   }
   // sayHi: Function;
+
+  @Prop({ default: new Types.ObjectId('632b51b154a4784de58e0c7c') })
+  user_get_id: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-
-UserSchema.virtual('getName').get(function () {
-  return 'a';
-});
-
-// AuthSchema.index({ type: 1 }, { unique: true });
-// UserSchema.virtual('fullName').get(function () {
-//   console.log('Runned');
-//   return `Amr`;
-// });

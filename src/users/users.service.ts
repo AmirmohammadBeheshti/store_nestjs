@@ -69,6 +69,10 @@ export class UsersService {
       throw new BadRequestException('Dont Have Any Data');
     }
   }
+
+  async agg() {
+    return await this.usersRepository.aggregateCollection();
+  }
   async findById(id: string) {
     try {
       const res = await this.usersRepository.findById(id);

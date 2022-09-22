@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Req,
+  GatewayTimeoutException,
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from 'src/auth/auth.service';
@@ -33,5 +34,10 @@ export class UsersController {
   ) {
     console.log(getInfo);
     return this.userService.findById(id);
+  }
+
+  @Get('Agg')
+  agg() {
+    return this.userService.agg();
   }
 }

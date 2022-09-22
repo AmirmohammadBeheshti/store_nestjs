@@ -35,6 +35,10 @@ export class ProductController {
   deleteProduct(@Param('id') id: string) {
     return this.productService.deleteProduct(id);
   }
+  @Put('Reserve_product/:id')
+  reserveProduct(@Param('id') id: string) {
+    return this.productService.reserveProduct(id);
+  }
   @Get('getProducts')
   @ApiQuery({ required: false, name: 'search' })
   getProduct(@Query('search') search?: string) {
