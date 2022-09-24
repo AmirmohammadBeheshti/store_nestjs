@@ -5,9 +5,8 @@ import { Transform, Type } from 'class-transformer';
 import { UserRelation } from './relation.schema';
 import { Category } from './category.schema';
 
-export type PostDocument = Post & Document;
-
-@Schema()
+export type postDocument = Post & Document;
+@Schema({ toJSON: { virtuals: true } })
 export class Post {
   @Prop()
   title: string;
@@ -16,29 +15,21 @@ export class Post {
   content: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: UserRelation.name })
-  @Type(() => UserRelation)
   author: UserRelation;
 
   @Prop({
-    type: [{ type: [mongoose.Schema.Types.ObjectId], ref: Category.name }],
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: Category.name }],
   })
-  @Type(() => Category)
-  categories: Category[];
+  categories: Category;
 
   AuthorsDetails: UserRelation;
-
-  category: Category;
 }
 const PostSchema = SchemaFactory.createForClass(Post);
 
-// PostSchema.virtual('authorDetails', {
-//   ref: 'UserRelation',
-//   localField: 'author',
-//   foreignField: '_id',
-// });
-// PostSchema.virtual('catagoriesDetails', {
-//   ref: 'Category',
-//   localField: 'categories',
-//   foreignField: '_id',
-// });
+PostSchema.virtual('fullName').get(function (this: postDocument): string {
+  return `${this.content} + 'This is a Test Text`;
+});
+PostSchema.virtual('setFull').set(function (this: postDocument) {
+  this.set({ content: 'Amir' });
+});
 export { PostSchema };

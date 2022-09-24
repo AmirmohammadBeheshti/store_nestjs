@@ -25,10 +25,11 @@ export class PostDto {
   @IsString()
   @IsNotEmpty()
   content: string;
+
   @ApiProperty({
     required: true,
     example: [],
   })
-  @IsOptional()
+  @IsString({ each: true })
   categories: string[];
 }
