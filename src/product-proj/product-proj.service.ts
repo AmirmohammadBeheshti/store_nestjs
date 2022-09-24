@@ -5,6 +5,7 @@ import { DefineProductDto } from './dto/define-product.dto';
 import { ProductProj, ProductProjDocument } from './schema/define_product';
 import { BSONTypeError } from 'bson';
 import { TransformationType } from 'class-transformer';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class productProjService {
@@ -13,6 +14,14 @@ export class productProjService {
     private readonly productProject: Model<ProductProjDocument>,
   ) {}
 
+  async findAllWithPaginate(pagination: PaginationDto) {
+    const { take, page } = pagination;
+    const res = await this.productProject.find().skip(take).limit(page).exec();
+    if (!res) {
+      throw new BadRequestException('Its Not Valid');
+    }
+    return res;
+  }
   async findAll() {
     try {
       const res = await this.productProject.find();

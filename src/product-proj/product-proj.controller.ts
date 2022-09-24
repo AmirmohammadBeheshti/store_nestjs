@@ -14,6 +14,7 @@ import { CreateUserDto } from 'src/auth/dto';
 import { login } from 'src/auth/interface';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { GetUser } from 'src/common/decorator/jwtGetInfo.decorator';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { OrdersService } from 'src/orders/orders.service';
 import { UserProjService } from 'src/user-proj/user-proj.service';
 import { DefineProductDto } from './dto/define-product.dto';
@@ -69,5 +70,10 @@ export class productProjController {
     const updateOrder = await this.productProj.updateTheProduct(ids, orders.id);
     const updateUser = await this.userProjService.updateOrderId(orders.id, id);
     return updateOrder;
+  }
+
+  @Get('GetProduct')
+  getProduct(@Query() pagination: PaginationDto) {
+    return this.productProj.findAllWithPaginate(pagination);
   }
 }
