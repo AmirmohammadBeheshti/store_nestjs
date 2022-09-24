@@ -16,7 +16,12 @@ export class productProjService {
 
   async findAllWithPaginate(pagination: PaginationDto) {
     const { take, page } = pagination;
-    const res = await this.productProject.find().skip(take).limit(page).exec();
+    const res = await this.productProject
+      .find()
+      .skip(take)
+      .limit(page)
+      .sort({ name: 'asc' }) // asc , desc => we can use the 1 OR -1 instead of that
+      .exec();
     if (!res) {
       throw new BadRequestException('Its Not Valid');
     }
