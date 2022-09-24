@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Post } from '@nestjs/common';
+import { Controller, Get, Body, Post, Delete, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PostDto } from './dto/post.dto';
 import { RegisterRelationDto } from './dto/register.dto';
@@ -20,5 +20,9 @@ export class RelationController {
   @Get('findOne')
   findPostByAuthorDetails() {
     return this.relationService.findPostByAuthorDetails();
+  }
+  @Delete('TransactionDelete')
+  transactionDelete(@Query('id') id: string) {
+    return this.relationService.deleteTransaction(id);
   }
 }
