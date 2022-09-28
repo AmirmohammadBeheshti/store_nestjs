@@ -78,4 +78,8 @@ export class ProductService {
       throw new BadRequestException('Please Enter Valid ID');
     }
   }
+
+  async findAndPaginate(pagination: any) {
+    return await this.productRepository.findAndPaginate(null, pagination);
+  }
 }

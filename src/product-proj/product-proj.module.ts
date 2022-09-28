@@ -16,5 +16,6 @@ import { ProductProj, ProductProjSchema } from './schema/define_product';
   ],
   controllers: [productProjController],
   providers: [productProjService],
+  exports: [productProjService],
 })
 export class ProductProjModule {}

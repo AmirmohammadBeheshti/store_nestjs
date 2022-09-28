@@ -9,6 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiNotImplementedResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { CreateProductDto } from './dto/createProduct.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
 import { ProductService } from './product.service';
@@ -46,5 +47,10 @@ export class ProductController {
     return this.productService.getAllProduct(
       search ? { productName: { $regex: search } } : null,
     );
+  }
+
+  @Get('getProductAndPaginate')
+  getProductAndPaginate(@Query() paginateQuery: PaginationDto) {
+    return this.productService.findAndPaginate(paginateQuery);
   }
 }

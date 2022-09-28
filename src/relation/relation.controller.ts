@@ -14,7 +14,7 @@ export class RelationController {
     return this.relationService.register(userRelation);
   }
   @Post('OneToMany')
-  OneToMany(@Body() postDto: PostDto, Qua) {
+  OneToMany(@Body() postDto: PostDto) {
     return this.relationService.createPost(postDto, '632eb666b2bb576ae01ccf07');
   }
   @Get('findOne')

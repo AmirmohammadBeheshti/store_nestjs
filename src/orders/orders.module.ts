@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ProductProjModule } from 'src/product-proj/product-proj.module';
 import { OrdersService } from './orders.service';
 import { Orders, ordersSchema } from './schema/order.schema';
 

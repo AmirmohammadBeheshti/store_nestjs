@@ -4,16 +4,38 @@ import { Document, Types } from 'mongoose';
 import { ProductProj } from 'src/product-proj/schema/define_product';
 import { Product } from 'src/product/schema/product.schema';
 import { Reserve } from 'src/product/schema/reserve.schema';
+import { AllUser } from 'src/test/schema/allUsers';
 
 export type ordersDocument = Orders & Document;
 
-@Schema({ collection: 'orders' })
+@Schema({ collection: 'orders', toJSON: { virtuals: true } })
 export class Orders {
   // immutable it means cant change at all
   @Prop()
   userId: string;
   @Prop()
-  products: ProductProj[];
+  productProj: number;
+
+  @Prop()
+  authorId: number;
+
+  allUser: AllUser;
+
+  pro: ProductProj;
 }
 
-export const ordersSchema = SchemaFactory.createForClass(Orders);
+const ordersSchema = SchemaFactory.createForClass(Orders);
+
+// ordersSchema.virtual('some', {
+//   ref: 'ProductProj',
+//   localField: 'productProj',
+//   foreignField: '_id',
+// });
+
+ordersSchema.virtual('getAuthor', {
+  ref: 'AllUser',
+  localField: 'authorId',
+  foreignField: '_id',
+});
+
+export { ordersSchema };

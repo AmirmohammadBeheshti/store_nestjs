@@ -15,6 +15,7 @@ import { login } from 'src/auth/interface';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { GetUser } from 'src/common/decorator/jwtGetInfo.decorator';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { SaveDto } from 'src/orders/dto/save.dto';
 import { OrdersService } from 'src/orders/orders.service';
 import { UserProjService } from 'src/user-proj/user-proj.service';
 import { DefineProductDto } from './dto/define-product.dto';
@@ -63,6 +64,7 @@ export class productProjController {
   ) {
     console.log(id);
     const getProducts = await this.productProj.findByIds(ids);
+    this.ordersService.saveOrderByIds(ids);
     const orders = await this.ordersService.saveOrder({
       userId: id,
       products: getProducts,
@@ -70,6 +72,12 @@ export class productProjController {
     const updateOrder = await this.productProj.updateTheProduct(ids, orders.id);
     const updateUser = await this.userProjService.updateOrderId(orders.id, id);
     return updateOrder;
+  }
+
+  @Post('populateProduct')
+  populateProduct(@Body() productProj: SaveDto) {
+    // return this.productProj.findAll();
+    return this.ordersService.saveOrderByIds(productProj);
   }
 
   @Get('GetProduct')

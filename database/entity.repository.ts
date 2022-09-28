@@ -1,6 +1,10 @@
 import { NotFoundException } from '@nestjs/common';
 import { Document, FilterQuery, Model, UpdateQuery } from 'mongoose';
 
+interface pagination {
+  take: number;
+  page: number;
+}
 export abstract class EntityRepository<T extends Document> {
   constructor(protected readonly entityModel: Model<T>) {}
 
@@ -21,6 +25,22 @@ export abstract class EntityRepository<T extends Document> {
     const a: Record<number, number> = { 500: 10 };
 
     return this.entityModel.find(entityFilterQuery);
+  }
+  calculateTake(pagination: pagination): number {
+    const { take, page } = pagination;
+    return take * (page - 1);
+  }
+  async findAndPaginate(
+    entityFilterQuery: FilterQuery<T> | null,
+    pagination: pagination = { take: 10, page: 1 },
+  ): Promise<T[] | null> {
+    const calcSkip = this.calculateTake(pagination);
+    console.log(calcSkip);
+    console.log(pagination);
+    return this.entityModel
+      .find(entityFilterQuery)
+      .skip(calcSkip)
+      .limit(pagination.take);
   }
 
   async create(createEntityData: unknown): Promise<T> {
