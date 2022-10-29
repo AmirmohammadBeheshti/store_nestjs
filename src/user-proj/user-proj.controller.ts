@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/auth/dto';
 import { CreateUserProjDto } from './dto/create_user_proj.dto';
@@ -7,7 +7,10 @@ import { UserProjService } from './user-proj.service';
 @ApiTags('Project With Relation')
 @Controller('user-proj')
 export class UserProjController {
-  constructor(private readonly userProjService: UserProjService) {}
+  constructor(
+    private readonly userProjService: UserProjService,
+    @Inject('useValueClaas') private readonly useClassVal: string,
+  ) {}
   // @Post('define_user')
   // defineUser(@Body() createUserDto: CreateUserProjDto) {
   //   return this.userProjService.saveData(createUserDto);
@@ -23,5 +26,10 @@ export class UserProjController {
   @Get('GetAllUser')
   getAllUser() {
     return this.userProjService.findAll();
+  }
+
+  @Get('GetUseValue')
+  useValue() {
+    return this.useClassVal;
   }
 }

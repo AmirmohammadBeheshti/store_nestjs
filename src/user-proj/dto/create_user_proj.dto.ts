@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  ValidateIf,
+} from 'class-validator';
 
 export class CreateUserProjDto {
   @ApiProperty({
@@ -9,6 +15,16 @@ export class CreateUserProjDto {
   @IsString()
   @IsNotEmpty()
   username: string;
+  @ApiProperty({
+    required: true,
+    example: true,
+  })
+  @ValidateIf(({ bool }) => {
+    return bool === 'amir';
+  })
+  @IsString()
+  @IsEmail()
+  bool: string;
   @ApiProperty({
     required: true,
     example: 'sdffsfs',

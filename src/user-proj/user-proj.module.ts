@@ -5,12 +5,19 @@ import { UserProjController } from './user-proj.controller';
 import { UserProjService } from './user-proj.service';
 
 @Module({
-  providers: [UserProjService],
+  providers: [
+    UserProjService,
+    {
+      provide: 'useValueClaas',
+      useValue: 55454,
+    },
+  ],
   imports: [
     MongooseModule.forFeature([
       { name: UserProject.name, schema: userProjectSchema },
     ]),
   ],
+
   controllers: [UserProjController],
   exports: [UserProjService],
 })

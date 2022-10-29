@@ -12,6 +12,7 @@ import { ProductProjModule } from './product-proj/product-proj.module';
 import { OrdersModule } from './orders/orders.module';
 import { RelationModule } from './relation/relation.module';
 import { UserProjModule } from './user-proj/user-proj.module';
+import { EventEmitterMo } from './event-emitter/event-emitter.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UserProjModule } from './user-proj/user-proj.module';
     ProductProjModule,
     OrdersModule,
     RelationModule,
+    EventEmitterMo,
   ],
   controllers: [AppController],
   providers: [AppService],

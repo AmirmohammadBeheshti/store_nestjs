@@ -3,8 +3,11 @@ import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
 import { TransformationType } from 'class-transformer';
 import { Types } from 'mongoose';
+import { events } from 'src/common/constant/event';
+import { OrderCreatedEvent } from 'src/event-emitter/class.event';
 import { CreateProductDto } from './dto/createProduct.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
 import { ProductRepository } from './product.repository';
@@ -29,6 +32,11 @@ export class ProductService {
     });
     return saveProduct;
   }
+  @OnEvent(events.EVENT_EMITTER)
+  runFunc(payloadEvent: OrderCreatedEvent) {
+    console.log('Emit Event from another service ', payloadEvent);
+  }
+
   async editProductById(id: string, updateProductDto: UpdateProductDto) {
     try {
       const res = await this.productRepository.findByIdAndUpdate(
