@@ -20,7 +20,12 @@ export class UsersService {
       const res = await this.usersRepository.create(createUserDto);
       return res;
     } catch (e) {
-      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+      const errorObj = {};
+
+      Object.keys(e.errors).forEach((key) => {
+        errorObj[key] = e.errors[key].message;
+      });
+      throw new HttpException(errorObj, HttpStatus.BAD_REQUEST);
     }
   }
   async findOne(username: string): Promise<any> {
