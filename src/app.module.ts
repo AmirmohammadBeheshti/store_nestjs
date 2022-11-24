@@ -8,11 +8,13 @@ import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { MetaDataModule } from './meta-data/meta-data.module';
 
 @Module({
   imports: [
     UsersModule,
     AuthModule,
+    MetaDataModule,
     ConfigModule.forRoot({}),
     MongooseModule.forRoot('mongodb://localhost:27017/store'),
   ],
